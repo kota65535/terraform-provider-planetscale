@@ -108,6 +108,7 @@ func (r *branchResource) Create(ctx context.Context, req resource.CreateRequest,
 	org := data.Organization
 	database := data.Database
 	name := data.Name
+	seedData := data.SeedData
 
 	if org.IsNull() || org.IsUnknown() || org.ValueString() == "" {
 		resp.Diagnostics.AddAttributeError(path.Root("organization"), "organization is required", "an organization must be provided and cannot be empty")
@@ -131,6 +132,7 @@ func (r *branchResource) Create(ctx context.Context, req resource.CreateRequest,
 	createReq := planetscale.CreateBranchReq{
 		Name:         name.ValueString(),
 		ParentBranch: *parentBranch,
+		SeedData:     seedData.ValueString(),
 	}
 	if !data.RestoredFromBranch.IsNull() && !data.RestoredFromBranch.IsUnknown() {
 		var rfb restoredFromBranchResource
@@ -200,6 +202,8 @@ func (r *branchResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 
 	data = branchResourceFromClient(ctx, &branch, data.Organization, data.Database, resp.Diagnostics)
+	data.SeedData = seedData
+
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -219,6 +223,7 @@ func (r *branchResource) Read(ctx context.Context, req resource.ReadRequest, res
 	org := data.Organization
 	database := data.Database
 	name := data.Name
+	seedData := data.SeedData
 
 	if org.IsNull() || org.IsUnknown() || org.ValueString() == "" {
 		resp.Diagnostics.AddAttributeError(path.Root("organization"), "organization is required", "an organization must be provided and cannot be empty")
@@ -245,6 +250,8 @@ func (r *branchResource) Read(ctx context.Context, req resource.ReadRequest, res
 	}
 
 	data = branchResourceFromClient(ctx, &res.Branch, data.Organization, data.Database, resp.Diagnostics)
+	data.SeedData = seedData
+
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -265,6 +272,7 @@ func (r *branchResource) Update(ctx context.Context, req resource.UpdateRequest,
 	org := data.Organization
 	database := data.Database
 	name := data.Name
+	seedData := data.SeedData
 
 	if org.IsNull() || org.IsUnknown() || org.ValueString() == "" {
 		resp.Diagnostics.AddAttributeError(path.Root("organization"), "organization is required", "an organization must be provided and cannot be empty")
@@ -304,6 +312,8 @@ func (r *branchResource) Update(ctx context.Context, req resource.UpdateRequest,
 		}
 	}
 	data = branchResourceFromClient(ctx, &branch, data.Organization, data.Database, resp.Diagnostics)
+	data.SeedData = seedData
+
 	if resp.Diagnostics.HasError() {
 		return
 	}
