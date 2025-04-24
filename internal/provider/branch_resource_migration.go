@@ -143,7 +143,7 @@ func branchSchemaV1() *schema.Schema {
 				Computed:    true,
 			},
 			"seed_data": schema.StringAttribute{
-				Description: "Seed data",
+				Description: "Seed data using the Data Branching® feature. Valid value is `last_successful_backup`",
 				Optional:    true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
